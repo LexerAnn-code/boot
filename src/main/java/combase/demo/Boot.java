@@ -1,6 +1,8 @@
 package combase.demo;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +17,7 @@ public class Boot {
         System.out.println("Received JSON:"+jsonNode.toString());
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<JsonNode> request = new HttpEntity<>(jsonNode);
-
+        ObjectMapper mapper = new ObjectMapper();
         String url = "https://safe-basin-01006.herokuapp.com/api/avail_spectrum";
         ResponseEntity<JsonNode> response =
                 restTemplate.exchange(url,
@@ -23,6 +25,18 @@ public class Boot {
                         request,
                         JsonNode.class);
         JsonNode responsePayload = response.getBody();
+
+        JsonNode node = null;
+        try {
+            node = mapper.readTree(String.valueOf(responsePayload));
+            JsonNode coordinatesNode = node.at("/spectrumSpecs/spectrumSchedules/Spectrum").get(0);
+            System.out.println(coordinatesNode);
+            return coordinatesNode;
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+
         return responsePayload;
 
 
