@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 @RestController
-@RequestMapping("base")
+@RequestMapping("basestation")
 public class Boot {
-    @PostMapping("/avail")
+    @PostMapping("/avail-req")
     public JsonNode details(@RequestBody JsonNode jsonNode){
         System.out.println("Received JSON:"+jsonNode.toString());
         RestTemplate restTemplate = new RestTemplate();
